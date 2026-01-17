@@ -5,7 +5,8 @@ A chalk management/moderation plugin for [Webfishing Cove](https://github.com/Dr
 If you look at the source code, you might think "Did a monkey write this?" This is very insulting. I am the equivalent of at least 10 monkeys. 🐵 (Seriously though, I barely know what I'm doing...)
 
 ## IMPORTANT
-For the best user experience, you must use the Persistent Chalk and Chalk Logs plugins together with Chalk Mod.
+ - For the best user experience, you must use the Persistent Chalk and Chalk Logs plugins together with Chalk Mod.
+ - I offer no guarantee that this plugin works at all. Do not use this plugin on your Cove server if you are cannot accept that your server might freeze or crash or memory leak etc.
 
 ## Installation
 
@@ -20,8 +21,28 @@ For the best user experience, you must use the Persistent Chalk and Chalk Logs p
 
  - *backupchalk*: Creates a backup of the current chalk into a timestamped JSON file. Also creates an image of the current chalk into a timestamped PNG file. If you have a Discord webhook URL in chalkmod.json, it will send the PNG to that URL.
  - *loadchalk*: Loads the chalk data from the chalk JSON file into memory. File must be in the Cove server folder. After the filename you can specify a canvas number (0 to 3) to load only that canvas.
+    Example:
+    ```
+    loadchalk chalk_2026-01-10_01-10-19.json 0
+    2026-01-10 10:19:38.095 -05:00 [INF] [ChalkMod] loadchalk command attempting to load data from canvas 0 in "chalk_2026-01-10_01-10-19.json"
+    2026-01-10 10:19:38.098 -05:00 [INF] [ChalkMod] Chalk data file found. Loading chalk data...
+    2026-01-10 10:19:38.347 -05:00 [INF] [ChalkMod] Restored Chalk Data for canvas 0
+    ```
  - *clearchalk*: Removes all chalk data from memory, unless you specify a canvas ID (0 to 3), then it will only clear that canvas.
  - *cleanupchalk*: Removes all non-standard canvas data from memory. Non-standard is defined as canvas ID values of less than 0 or more than 3.
+
+## Those canvas numbers
+
+ - The canvas at spawn is 0
+ - The canvas in front of the aquarium is 1
+ - The canvas at the corner of the map is 2
+ - The canvas up from spawn close the the small river is 3
+
+<img width="518" height="503" alt="Webfishing map" src="https://github.com/user-attachments/assets/bdab8edb-31ef-4858-af2c-9d13daa7ae8e" />
+
+(thanks to 'Andres Of Astoria' for the map)
+
+<img width="300" height="300" alt="chalkmod_canvases" src="https://github.com/user-attachments/assets/41aedb66-9ad3-466b-ac64-330130946d0d" />
 
 ## Please note
  - the loadchalk, clearchalk and cleanupchalk commands are performed on the chalk data in the running server's memory. They do not edit the current chalk.json backup file from Persistent Chalk. Also, Cove by default only sends chalk data to users when they log on the lobby. I will eventually figure out how to push chalk updates to currently logged in users, but for now it is not being done. Therefore, if you make updates to the chalk data, users would need to leave and come back to the lobby in order to see the changes.
