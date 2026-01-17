@@ -5,7 +5,7 @@ A chalk management/moderation plugin for [Webfishing Cove](https://github.com/Dr
 If you look at the source code, you might think "Did a monkey write this?" This is very insulting. I am the equivalent of at least 10 monkeys. 🐵 (Seriously though, I barely know what I'm doing...)
 
 ## IMPORTANT
- - For the best user experience, you must use the Persistent Chalk and Chalk Logs plugins together with Chalk Mod.
+ - For "the best user experience", you must use the 'official' Chalk Logs plugin together with Chalk Mod.
  - I offer no guarantee that this plugin works at all. Do not use this plugin on your Cove server if you are cannot accept that your server might freeze or crash or memory leak etc.
 
 ## Installation
@@ -36,7 +36,7 @@ If you look at the source code, you might think "Did a monkey write this?" This 
  - The canvas at spawn is 0
  - The canvas in front of the aquarium is 1
  - The canvas at the corner of the map is 2
- - The canvas up from spawn close the the small river is 3
+ - The canvas up from spawn close to the small river is 3
 
 <img width="518" height="503" alt="Webfishing map" src="https://github.com/user-attachments/assets/bdab8edb-31ef-4858-af2c-9d13daa7ae8e" />
 
