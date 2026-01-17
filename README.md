@@ -4,6 +4,9 @@
 A chalk management/moderation plugin for [Webfishing Cove](https://github.com/DrMeepso/WebFishingCove) dedicated server for the [Webfishing](https://store.steampowered.com/app/3146520/WEBFISHING/) game.
 If you look at the source code, you might think "Did a monkey write this?" This is very insulting. I am the equivalent of at least 10 monkeys. 🐵 (Seriously though, I barely know what I'm doing...)
 
+## IMPORTANT
+For the best user experience, you must use the Persistent Chalk and Chalk Logs plugins together with Chalk Mod.
+
 ## Installation
 
  - All files go into your Cove plugins folder, except for *chalkmod.json* which goes into your main Cove folder.
@@ -19,3 +22,6 @@ If you look at the source code, you might think "Did a monkey write this?" This 
  - *loadchalk*: Loads the chalk data from the chalk JSON file into memory. File must be in the Cove server folder. After the filename you can specify a canvas number (0 to 3) to load only that canvas.
  - *clearchalk*: Removes all chalk data from memory, unless you specify a canvas ID (0 to 3), then it will only clear that canvas.
  - *cleanupchalk*: Removes all non-standard canvas data from memory. Non-standard is defined as canvas ID values of less than 0 or more than 3.
+
+## Please note
+ - the loadchalk, clearchalk and cleanupchalk commands are performed on the chalk data in the running server's memory. They do not edit the current chalk.json backup file from Persistent Chalk. Also, Cove by default only sends chalk data to users when they log on the lobby. I will eventually figure out how to push chalk updates to currently logged in users, but for now it is not being done. Therefore, if you make updates to the chalk data, users would need to leave and come back to the lobby in order to see the changes.
