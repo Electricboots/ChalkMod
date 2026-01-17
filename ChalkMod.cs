@@ -6,11 +6,18 @@ using System.Text.Json.Serialization;
 using Cove.GodotFormat;
 using SkiaSharp;
 using System.Text;
-using System.ComponentModel;
 
-// Change the namespace and class name!
+
+// The json serialize/deserialize stuff is pretty much lifted from the Persistent Chalk
+// Cove plugin. https://github.com/DrMeepso/CovePlugins
+// Thank you Meepso.
+
 namespace ChalkMod
 {
+
+// for the Raw bitmap stuff below I have used the following as a base:
+// https://swharden.com/blog/2022-11-04-csharp-create-bitmap/
+// Thank you Scott W Harden
     public struct RawColor
     {
         public readonly byte R, G, B;
@@ -219,6 +226,7 @@ namespace ChalkMod
             string jsonString = File.ReadAllText(Path.Combine(currentDir,"chalkmod.json"));
             chalkModSettings = JsonSerializer.Deserialize<ChalkModSettings>(jsonString);
 
+            // Cant be less than 10 seconds. Default is 300 seconds.
             if (string.IsNullOrEmpty(chalkModSettings.checkseconds) || chalkModSettings.checkseconds == "")
             {
                 timeToCheck = 300;
@@ -314,6 +322,7 @@ namespace ChalkMod
                     return;
                 }
 
+                // Using -2 has a "all canvases" value because why not
                 int canvasid = -2;
 
                 if (args.Length > 0)
@@ -392,6 +401,8 @@ namespace ChalkMod
             if (hadOfflineUpdate)
                 return;
 
+            // I felt I shouldn't do a bunch of things multiple times a second, so instead
+            // once every 30 seconds seemed better in my head
             if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - lastCheck < 30)
                 return;
 
@@ -439,6 +450,7 @@ namespace ChalkMod
 
             string timestamp = string.Format("{0:yyyy-MM-dd_HH-mm-ss}", DateTime.Now);
 
+            // making a copy of the chalk data to work with
             List<ChalkCanvas> chalkData = ParentServer.chalkCanvas;
 
             if (chalkData != null)
@@ -484,6 +496,7 @@ namespace ChalkMod
                                 int myx = Convert.ToInt32(entry.Key.x) + offsetX - 1;
                                 int myy = Convert.ToInt32(entry.Key.y) + offsetY - 1;
 
+                                // -1 is eraser
                                 if (entry.Value == -1)
                                 {
                                     chalkbmp.SetPixel(myx,myy,blankbmp.GetPixel(myx,myy));
@@ -500,7 +513,9 @@ namespace ChalkMod
                             }
                         }
                     }
-                    else if (canvas.canvasID > 4 || canvas.canvasID < -1)
+                    // non-standard canvas IDs (usually from stamps mod) will get a separate PNG generated
+                    // also those PNGs will not get pushed to the Discord webhook
+                    else if (canvas.canvasID >= 4 || canvas.canvasID < -1)
                     {
                         RawBitmap stampbmp = new RawBitmap(400, 400);
                         stampbmp.DrawRectangle(0, 0, 399, 399, new RawColor("#DEB887"));
@@ -583,6 +598,7 @@ namespace ChalkMod
 
         public void clearChalk(int canvasid)
         {
+            // using value less than -1 as a "all canvases" value
             if (canvasid < -1)
             {
                 ParentServer.chalkCanvas.Clear();
