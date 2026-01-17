@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChalkMod", "ChalkMod.csproj", "{82C13ED3-13AA-C431-7C54-08315942D59E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82C13ED3-13AA-C431-7C54-08315942D59E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82C13ED3-13AA-C431-7C54-08315942D59E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82C13ED3-13AA-C431-7C54-08315942D59E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82C13ED3-13AA-C431-7C54-08315942D59E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB0D34DC-C697-4B48-8046-2D4D09B90344}
+	EndGlobalSection
+EndGlobal
