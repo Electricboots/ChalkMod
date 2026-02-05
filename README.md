@@ -13,7 +13,7 @@ If you look at the source code, you might think "Did a monkey write this?" This 
 ## Installation
 
  - All files go into your Cove plugins folder, except for *chalkmod.json* which goes into your main Cove folder.
- - *chalkmod.json* is the configuration file for the plugin.
+ - [*chalkmod.json*](chalkmod.json) is the configuration file for the plugin.
     - *webhookuser*: it is the name used in Discord for posting the chalk.
     - *webhookurl*: put your Discord webhook URL in here so that an image of the chalk is posted on your Discord every time a backup is made. Leave blank (ie: empty quotes) if you don't want to post anything to Discord.
     - *checkseconds*: it is used to autobackup the chalk file if it has been updated at some point during the last [*checkseconds*] seconds (default 300 seconds)
