@@ -137,7 +137,11 @@ namespace ChalkMod
 
     public class Vector2Converter : JsonConverter<Vector2>
     {
-        public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Vector2 Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
             var doc = JsonDocument.ParseValue(ref reader);
             var root = doc.RootElement;
@@ -148,7 +152,11 @@ namespace ChalkMod
             return new Vector2(x, y);
         }
 
-        public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
+        public override void Write(
+            Utf8JsonWriter writer,
+            Vector2 value,
+            JsonSerializerOptions options
+        )
         {
             writer.WriteStartObject();
             writer.WriteNumber("X", value.x);
@@ -159,30 +167,50 @@ namespace ChalkMod
 
     public class ChalkCanvasConverter : JsonConverter<ChalkCanvas>
     {
-        public override ChalkCanvas Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        private CoveServer parentServer;
+        private JsonSerializerOptions jsonOptions;
+
+        public ChalkCanvasConverter(CoveServer parentServer)
+            : base()
+        {
+            this.parentServer = parentServer;
+        }
+
+        public override ChalkCanvas Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
             var doc = JsonDocument.ParseValue(ref reader);
             var root = doc.RootElement;
 
             long canvasID = root.GetProperty("CanvasID").GetInt64();
-            ChalkCanvas canvas = new ChalkCanvas(canvasID);
+            ChalkCanvas canvas = new ChalkCanvas(canvasID, this.parentServer);
 
             if (root.TryGetProperty("ChalkImage", out JsonElement chalkImageElement))
             {
-                var chalkImage = JsonSerializer.Deserialize<Dictionary<string, int>>(chalkImageElement.GetRawText(), options);
+                var chalkImage = JsonSerializer.Deserialize<Dictionary<string, long>>(
+                    chalkImageElement.GetRawText(),
+                    options
+                );
 
                 var deserializedChalkImage = chalkImage.ToDictionary(
                     kvp => JsonSerializer.Deserialize<Vector2>(kvp.Key, options),
                     kvp => kvp.Value
                 );
 
-                canvas.chalkImage = deserializedChalkImage;
+                canvas.chalkUpdate(deserializedChalkImage);
             }
 
             return canvas;
         }
 
-        public override void Write(Utf8JsonWriter writer, ChalkCanvas value, JsonSerializerOptions options)
+        public override void Write(
+            Utf8JsonWriter writer,
+            ChalkCanvas value,
+            JsonSerializerOptions options
+        )
         {
             writer.WriteStartObject();
 
@@ -211,7 +239,17 @@ namespace ChalkMod
     }
     public class ChalkMod : CovePlugin
     {
-        public ChalkMod(CoveServer server) : base(server) { }
+        private JsonSerializerOptions jsonOptions;
+        public ChalkMod(CoveServer server)
+            : base(server)
+        {
+            this.jsonOptions = new JsonSerializerOptions
+            {
+                IncludeFields = true,
+                Converters = { new Vector2Converter(), new ChalkCanvasConverter(server) },
+            };
+        }
+
         private string currentDir = Directory.GetCurrentDirectory();
         private const string ChalkLog = "chalkLogs.txt";
         private ChalkModSettings chalkModSettings;
@@ -438,12 +476,6 @@ namespace ChalkMod
             UnregisterCommand("chalkmod");
         }
 
-        private static JsonSerializerOptions jsonOptions = new JsonSerializerOptions
-        {
-            IncludeFields = true,
-            Converters = { new Vector2Converter(), new ChalkCanvasConverter()}
-        };
-
         public void backupChalk()
         {
             string[] palette = chalkModSettings.palette;
@@ -451,7 +483,8 @@ namespace ChalkMod
             string timestamp = string.Format("{0:yyyy-MM-dd_HH-mm-ss}", DateTime.Now);
 
             // making a copy of the chalk data to work with
-            List<ChalkCanvas> chalkData = ParentServer.chalkCanvas;
+            //List<ChalkCanvas> chalkData = ParentServer.chalkCanvas;
+            List<ChalkCanvas> chalkData = new List<ChalkCanvas>(ParentServer.chalkCanvas);
 
             if (chalkData != null)
             {
@@ -487,7 +520,7 @@ namespace ChalkMod
 
                     if (canvas.canvasID <= 4 && canvas.canvasID >= 0)
                     {
-                        foreach (KeyValuePair<Vector2, int> entry in canvas.chalkImage.ToList())
+                        foreach (KeyValuePair<Vector2, long> entry in canvas.chalkImage.ToList())
                         {
                             //Log("Canvas{0},{1},{2}", canvas.canvasID, entry.Key, entry.Value);
 
@@ -520,7 +553,7 @@ namespace ChalkMod
                         RawBitmap stampbmp = new RawBitmap(400, 400);
                         stampbmp.DrawRectangle(0, 0, 399, 399, new RawColor("#DEB887"));
 
-                        foreach (KeyValuePair<Vector2, int> entry in canvas.chalkImage.ToList())
+                        foreach (KeyValuePair<Vector2, long> entry in canvas.chalkImage.ToList())
                         {
                             //Console.WriteLine("{0},{1}", entry.Value + 1, palette.Length - 1);
                             if (entry.Value <= 6 && entry.Value >= 0)
@@ -537,7 +570,7 @@ namespace ChalkMod
                 postChalk(currentDir,"chalk_" + timestamp + ".png");
 
                 // use the json formatter to serialize the chalk data
-                string json = JsonSerializer.Serialize(chalkData, jsonOptions);
+                string json = JsonSerializer.Serialize(chalkData, this.jsonOptions);
 
                 // write the json string to a file
                 File.WriteAllText(Path.Combine(currentDir,"chalk_" + timestamp + ".json"), json);
@@ -573,7 +606,7 @@ namespace ChalkMod
                             int index = ParentServer.chalkCanvas.FindIndex(a => a.canvasID == canvasid);
                             if (index == -1)
                             {
-                                var newcanvas = new ChalkCanvas(canvasid);
+                                var newcanvas = new ChalkCanvas(canvasid,this.ParentServer);
                                 newcanvas = canvas;
                             }
                             else
