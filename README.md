@@ -1,4 +1,6 @@
 # ChalkMod
+[Change Log](Changelog.md)
+
 <img width="400" height="400" alt="chalk-2025-11-08  6-45-13 02" src="https://github.com/user-attachments/assets/e973c236-69d8-4eb4-87bd-9ad95f563b94" />
 
 A chalk management/moderation plugin for [Webfishing Cove](https://github.com/DrMeepso/WebFishingCove) dedicated server for the [Webfishing](https://store.steampowered.com/app/3146520/WEBFISHING/) game.
