@@ -1,10 +1,9 @@
 {
   "webhookuser": "WFChalk",
   "webhookurl": "your discord webhook URL",
-  "checkseconds": "300"
-  "palette": {
-	"#ffe7c5",
-	"#2a3844",
+  "checkseconds": "300",
+  "palette": [ "#ffe7c5",
+	"#171768",
 	"#d70b5d",
 	"#0db39e",
 	"#f4c009",
@@ -64,6 +63,5 @@
 	"#a16e4b",
 	"#d4aa78",
 	"#e6bc98",
-	"#ffe7d1"
-  }
+	"#ffe7d1"]
 }
