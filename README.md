@@ -8,7 +8,7 @@ If you look at the source code, you might think "Did a monkey write this?" This 
 
 ## IMPORTANT
  - For "the best user experience", you must use the 'official' Chalk Logs plugin together with Chalk Mod.
- - I offer no guarantee that this plugin works at all, but I have been using on my own Cove server for about 3 weeks now and it's been working well.
+ - I offer no guarantee that this plugin works at all, but I have been using on my own Cove server for a while now and it's been working well.
 
 ## Installation
 
