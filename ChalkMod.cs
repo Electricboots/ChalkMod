@@ -232,6 +232,7 @@ namespace ChalkMod
     }
     public class ChalkModSettings
     {
+        public required string chalkfolder { get; set; }
         public required string webhookuser { get; set; }
         public required string webhookurl { get; set; }
         public required string checkseconds { get; set; }
@@ -251,6 +252,7 @@ namespace ChalkMod
         }
 
         private string currentDir = Directory.GetCurrentDirectory();
+        private string ChalkDir = "";
         private const string ChalkLog = "chalkLogs.txt";
         private ChalkModSettings chalkModSettings;
         public int timeToCheck;
@@ -280,6 +282,23 @@ namespace ChalkMod
 
             if (string.IsNullOrEmpty(chalkModSettings.webhookuser) || chalkModSettings.webhookuser == "")
                 chalkModSettings.webhookuser = "WFChalk";
+
+            if (!string.IsNullOrEmpty(chalkModSettings.chalkfolder) && chalkModSettings.chalkfolder != "")
+            {                
+                try
+                {
+                    ChalkDir = Path.Combine(currentDir,chalkModSettings.chalkfolder);
+                    Directory.CreateDirectory(ChalkDir);
+                }
+                catch
+                {
+                    ChalkDir = currentDir;
+                }
+            }
+            else
+            {
+                ChalkDir = currentDir;
+            }
 
             Log("ChalkMod working! Backup delay set to "+timeToCheck.ToString()+" seconds.");
 
@@ -561,19 +580,19 @@ namespace ChalkMod
                                 stampbmp.SetPixel(Convert.ToInt32(entry.Key.x) + 10, Convert.ToInt32(entry.Key.y) + 10,new RawColor(palette[entry.Value]));
                             }
                         }
-                        stampbmp.Save(canvas.canvasID.ToString() + "_" + "chalk_" + timestamp + ".png","PNG");
+                        stampbmp.Save(Path.Combine(ChalkDir,canvas.canvasID.ToString() + "_" + "chalk_" + timestamp + ".png"),"PNG");
                     }
                 }
-                chalkbmp.Save(Path.Combine(currentDir,"chalk_" + timestamp + ".png"),"PNG");
+                chalkbmp.Save(Path.Combine(ChalkDir,"chalk_" + timestamp + ".png"),"PNG");
                 Log("Chalk Data Converted and saved to chalk_" + timestamp + ".png");
 
-                postChalk(currentDir,"chalk_" + timestamp + ".png");
+                postChalk(ChalkDir,"chalk_" + timestamp + ".png");
 
                 // use the json formatter to serialize the chalk data
                 string json = JsonSerializer.Serialize(chalkData, this.jsonOptions);
 
                 // write the json string to a file
-                File.WriteAllText(Path.Combine(currentDir,"chalk_" + timestamp + ".json"), json);
+                File.WriteAllText(Path.Combine(ChalkDir,"chalk_" + timestamp + ".json"), json);
                 Log("Chalk Data saved to chalk_" + timestamp + ".json");
             } else
             {
