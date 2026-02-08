@@ -350,10 +350,24 @@ namespace ChalkMod
                     filename = String.Join(" ",args);
                 }
                 
-                if (args[0] == "" || args[0] == null || !File.Exists(Path.Combine(currentDir,filename)) || filename.Length < 6 || filename.Substring(filename.Length - 5) != ".json" || filename.Contains(".."))
+                if (filename.Substring(filename.Length - 5) != ".json")
+                {
+                    Log("loadchalk command failed - file \"" + filename + "\" is not a JSON.");
+                    SendPlayerChatMessage(player, "loadchalk command failed - file \"" + filename + "\" is not a JSON.");
+                    return;
+                }
+
+                if (!File.Exists(Path.Combine(ChalkDir,filename)))
                 {
                     Log("loadchalk command failed - file \"" + filename + "\" not found.");
                     SendPlayerChatMessage(player, "loadchalk command failed - file \"" + filename + "\" not found.");
+                    return;
+                }
+
+                if (args[0] == "" || args[0] == null || filename.Length < 6 || filename.Contains(".."))
+                {
+                    Log("loadchalk command failed - file \"" + filename + "\" is invalid.");
+                    SendPlayerChatMessage(player, "loadchalk command failed - file \"" + filename + "\" is invalid.");
                     return;
                 }
                 
@@ -367,7 +381,7 @@ namespace ChalkMod
                     Log("loadchalk command attempting to load data from canvas " + canvasid.ToString() + " in \"" + filename + "\"");
                     SendPlayerChatMessage(player, "loadchalk command attempting to load data from canvas " + canvasid.ToString() + " in \"" + filename + "\"");
                 }
-                loadChalk(currentDir, filename, canvasid);
+                loadChalk(ChalkDir, filename, canvasid);
             });
             SetCommandDescription("loadchalk", "loads chalk data from a json file");
 
@@ -379,7 +393,7 @@ namespace ChalkMod
                     return;
                 }
 
-                // Using -2 has a "all canvases" value because why not
+                // Using -2 as a "all canvases" value because why not
                 int canvasid = -2;
 
                 if (args.Length > 0)
